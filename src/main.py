@@ -1,5 +1,5 @@
 from textnode import TextNode
-from htmlnode import HTMLNode
+from htmlnode import HTMLNode, LeafNode
 
 # The main function of the script
 def main():
@@ -7,9 +7,11 @@ def main():
   print(text)
 
   htmlnode = HTMLNode("div", None, [text], {"href": "https://www.google.com", "target": "_blank"})
-  print(htmlnode)
-
   print(htmlnode.props_to_html())
+
+  leafnode = LeafNode("a", "Click me!", {}, {"href": "https://www.google.com"})
+  print(leafnode.to_html())
+
 
 
 main()
