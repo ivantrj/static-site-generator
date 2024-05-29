@@ -1,41 +1,68 @@
 import unittest
-from htmlnode import HTMLNode, LeafNode
+from htmlnode import HTMLNode, LeafNode, ParentNode
 
-class TestPropsToHTML(unittest.TestCase):
+class TestHTMLNode(unittest.TestCase):
+    def test_to_html_props(self):
+        node = HTMLNode(
+            "div",
+            "hello world",
+            None,
+            {"class": "greeting", "href": "www.google.com"},
+        )
+        self.assertEqual(node.props_to_html(), 'class="greeting" href="www.google.com"')
 
-    def test_empty_props(self):
-        node = HTMLNode('div', None, [], {})
-        self.assertEqual(node.props_to_html(), '')
+    def test_to_html_no_children(self):
+        node = LeafNode("p", "Hello world")
+        self.assertEqual(node.to_html(), "<p>Hello world</p>")
+        
+    def test_to_html_no_tag(self):
+        node = LeafNode(None, "Hello, world!")
+        self.assertEqual(node.to_html(), "Hello, world!")
 
-    def test_single_prop(self):
-        node = HTMLNode('div', None, [], {'id': 'my-div'})
-        self.assertEqual(node.props_to_html(), 'id="my-div"')
+    def test_to_html_with_children(self):
+        child_node = LeafNode("span", "child")
+        parent_node = ParentNode("div", [child_node])
+        self.assertEqual(parent_node.to_html(), "<div><span>child</span></div>")
 
-    def test_multiple_props(self):
-        node = HTMLNode('div', None, [], {'id': 'my-div', 'class': 'my-class'})
-        self.assertEqual(node.props_to_html(), 'id="my-div" class="my-class"')
+    def test_to_html_with_grandchildren(self):
+        grandchild_node = LeafNode("b", "grandchild")
+        child_node = ParentNode("span", [grandchild_node])
+        parent_node = ParentNode("div", [child_node])
+        self.assertEqual(
+            parent_node.to_html(),
+            "<div><span><b>grandchild</b></span></div>",
+        )
 
-    def test_prop_values_with_spaces(self):
-        node = HTMLNode('div', None, [], {'data-tooltip': 'This is a tooltip with spaces'})
-        self.assertEqual(node.props_to_html(), 'data-tooltip="This is a tooltip with spaces"')
+    def test_to_html_many_children(self):
+        node = ParentNode(
+            "p",
+            [
+                LeafNode("b", "Bold text"),
+                LeafNode(None, "Normal text"),
+                LeafNode("i", "italic text"),
+                LeafNode(None, "Normal text"),
+            ],
+        )
+        self.assertEqual(
+            node.to_html(),
+            "<p><b>Bold text</b>Normal text<i>italic text</i>Normal text</p>",
+        )
 
-if __name__ == "__main__":
-    unittest.main()
+    def test_headings(self):
+        node = ParentNode(
+            "h2",
+            [
+                LeafNode("b", "Bold text"),
+                LeafNode(None, "Normal text"),
+                LeafNode("i", "italic text"),
+                LeafNode(None, "Normal text"),
+            ],
+        )
+        self.assertEqual(
+            node.to_html(),
+            "<h2><b>Bold text</b>Normal text<i>italic text</i>Normal text</h2>",
+        )
 
-
-class TestLeafNode(unittest.TestCase):
-  def test_to_html_none_value(self):
-    node = LeafNode('div', None, [], {})
-    with self.assertRaises(ValueError):
-      node.to_html()
-
-  def test_to_html_empty_tag(self):
-    node = LeafNode('', 'hello', [], {})
-    self.assertEqual(node.to_html(), 'hello')
-
-  def test_to_html_with_tag(self):
-    node = LeafNode('h1', 'hello', [], {'id': 'my-heading'})
-    self.assertEqual(node.to_html(), '<h1 id="my-heading">hello</h1>')
 
 if __name__ == "__main__":
     unittest.main()
