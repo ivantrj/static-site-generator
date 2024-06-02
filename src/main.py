@@ -1,27 +1,17 @@
-from textnode import TextNode
+from textnode import (
+    TextNode,
+    text_type_text,
+    text_type_bold,
+    text_type_italic,
+    text_type_code,
+)
 from htmlnode import HTMLNode, LeafNode, ParentNode
+from inline_markdown import split_nodes_delimiter, extract_markdown_images,extract_markdown_links
 
 # The main function of the script
 def main():
   text = TextNode("This is a text node", "bold", "https://www.google.com")
   print(text)
 
-  htmlnode = HTMLNode("div", None, [text], {"href": "https://www.google.com", "target": "_blank"})
-  print(htmlnode.props_to_html())
-
-  leafnode = LeafNode("a", "Click me!", {"href": "https://www.google.com"})
-  print(leafnode.to_html())
-
-  node = ParentNode(
-  "p",
-    [
-        LeafNode("b", "Bold text"),
-        LeafNode(None, "Normal text"),
-        LeafNode("i", "italic text"),
-        LeafNode(None, "Normal text"),
-    ],
-  )
-
-  print(node.to_html())
 
 main()
