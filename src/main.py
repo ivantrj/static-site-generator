@@ -6,19 +6,14 @@ from textnode import (
     text_type_code,
 )
 from htmlnode import HTMLNode, LeafNode, ParentNode
-from inline_markdown import split_nodes_delimiter, split_nodes_image, split_nodes_link
+from inline_markdown import split_nodes_delimiter, split_nodes_image, split_nodes_link, text_to_textnodes
 
 # The main function of the script
 def main():
   text = TextNode("This is a text node", "bold", "https://www.google.com")
   print(text)
 
-  node = TextNode(
-    "This is text with an ![image](https://storage.googleapis.com/qvault-webapp-dynamic-assets/course_assets/zjjcJKZ.png) and another ![second image](https://storage.googleapis.com/qvault-webapp-dynamic-assets/course_assets/3elNhQu.png)",
-    text_type_text,
-  )
-  new_nodes = split_nodes_link([node])
-  print(f"Split nodes: {new_nodes}")
+  print(text_to_textnodes("This is **text** with an *italic* word and a `code block` and an ![image](https://storage.googleapis.com/qvault-webapp-dynamic-assets/course_assets/zjjcJKZ.png) and a [link](https://boot.dev)"))
 
 
 
