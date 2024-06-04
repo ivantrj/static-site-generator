@@ -5,6 +5,10 @@ block_type_quote = "quote"
 block_type_unordered_list = "unordered_list"
 block_type_ordered_list = "ordered_list"
 
+from inline_markdown import text_to_textnodes
+from textnode import text_node_to_html_node
+from htmlnode import ParentNode
+
 def markdown_to_blocks(markdown):
     blocks = markdown.split("\n\n")
     filtered_blocks = []
@@ -25,14 +29,14 @@ def markdown_to_html_node(markdown):
 def block_to_html_node(block):
     block_type = block_to_block_type(block)
     if block_type == block_type_paragraph:
-        return paragraph_to_html_node(block)
+        return paragraph_to_children(block)
     if block_type == block_type_heading:
         return heading_to_html_node(block)
     if block_type == block_type_code:
         return code_to_html_node(block)
-    if block_type == block_type_olist:
+    if block_type == block_type_ordered_list:
         return olist_to_html_node(block)
-    if block_type == block_type_ulist:
+    if block_type == block_type_unordered_list:
         return ulist_to_html_node(block)
     if block_type == block_type_quote:
         return quote_to_html_node(block)
@@ -90,7 +94,7 @@ def paragraph_to_children(block):
     children = text_to_children(paragraph)
     return ParentNode("p", children)
 
-def heading_to_htlm_node(block):
+def heading_to_html_node(block):
     level = 0 
     for char in block:
         if char == "#":
