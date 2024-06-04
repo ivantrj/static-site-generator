@@ -1,19 +1,24 @@
-from textnode import (
-    TextNode,
-    text_type_text,
-    text_type_bold,
-    text_type_italic,
-    text_type_code,
-)
-from htmlnode import HTMLNode, LeafNode, ParentNode
-from inline_markdown import split_nodes_delimiter, split_nodes_image, split_nodes_link, text_to_textnodes
 
-# The main function of the script
+import shutil
+import os
+
+from copystatic import copy_files_recursive
+
+
+dir_path_static = "./static"
+dir_path_public = "./public"
+
+def copy_files():
+    print("Deleting public directory...")
+    if os.path.exists(dir_path_public):
+      shutil.rmtree(dir_path_public)
+
+    print("Copying static files to public directory...")
+    copy_files_recursive(dir_path_static, dir_path_public)
+
 def main():
-  text = TextNode("This is a text node", "bold", "https://www.google.com")
-  print(text)
 
-  print(text_to_textnodes("This is **text** with an *italic* word and a `code block` and an ![image](https://storage.googleapis.com/qvault-webapp-dynamic-assets/course_assets/zjjcJKZ.png) and a [link](https://boot.dev)"))
+  copy_files()
 
 
 
