@@ -25,19 +25,36 @@ def generate_page(from_path, template_path, dest_path):
     template = f.read()
 
   title = extract_title(markdown)
-  html = markdown_to_html_node(markdown).to_html()
+  html_content = markdown_to_html_node(markdown).to_html()
+  print(f"Html content: {html_content}")
 
-  html = template.replace("{{ Title }}", title).replace("{{ Content }}", html)
+  html = template.replace("{{ Title }}", title).replace("{{ Content }}", html_content)
 
   with open(dest_path, "w") as f:
     f.write(html)
 
-def copy_files():
-  generate_page("content/index.md", "./template.html", dir_path_public + "/index.html")
+import os
+
+def generate_pages_recursive(dir_path_content, template_path, dest_dir_path):
+  for filename in os.listdir(dir_path_content):
+      from_path = os.path.join(dir_path_content, filename)
+      
+      if filename.endswith(".md"):
+          print(f"Processing markdown file: {from_path}")
+          dest_path = os.path.join(dest_dir_path, filename.replace(".md", ".html"))
+          generate_page(from_path, template_path, dest_path)
+      elif os.path.isdir(from_path):
+          print(f"Entering directory: {from_path}")
+          dest_subdir = os.path.join(dest_dir_path, filename)
+          if not os.path.exists(dest_subdir):
+              os.makedirs(dest_subdir)
+          generate_pages_recursive(from_path, template_path, dest_subdir)
+
+
 
 def main():
 
-  copy_files()
+  generate_pages_recursive("./content", "template.html", dir_path_public)
 
 
 

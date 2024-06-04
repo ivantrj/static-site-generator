@@ -12,7 +12,9 @@ class HTMLNode():
     if self.props is None:
         return ""
     props_html = ""
-    return " ".join([f'{key}="{value}"' for key, value in self.props.items()])
+    for prop in self.props:
+        props_html += f' {prop}="{self.props[prop]}"'
+    return props_html
 
   def __repr__(self):
     return f"HTMLNode(tag='{self.tag}', value='{self.value}', children={self.children}, props={self.props})"
@@ -44,7 +46,7 @@ class ParentNode(HTMLNode):
     if self.children is None:
       raise ValueError("Invalid HTML: no children")
   
-    children_html = ''
+    children_html = ""
     for child in self.children:
       children_html += child.to_html()
 

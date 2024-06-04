@@ -29,7 +29,7 @@ def markdown_to_html_node(markdown):
 def block_to_html_node(block):
     block_type = block_to_block_type(block)
     if block_type == block_type_paragraph:
-        return paragraph_to_children(block)
+        return paragraph_to_html_node(block)
     if block_type == block_type_heading:
         return heading_to_html_node(block)
     if block_type == block_type_code:
@@ -88,7 +88,7 @@ def text_to_children(text):
         children.append(html_node)
     return children
 
-def paragraph_to_children(block):
+def paragraph_to_html_node(block):
     lines = block.split("\n")
     paragraph = " ".join(lines)
     children = text_to_children(paragraph)
