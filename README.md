@@ -1,5 +1,3 @@
-Absolutely, here's the converted text in markdown format:
-
 ## Static Site Generator
 
 ### Overview
